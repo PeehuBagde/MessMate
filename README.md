@@ -1,4 +1,6 @@
-# Hostel Mess Management System 🍽️
+# MessMate 🍽️
+
+Smart Hostel Mess Management System
 
 A full-stack web application for managing hostel mess operations.
 
