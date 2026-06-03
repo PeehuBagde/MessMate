@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { jwtDecode } from "jwt-decode";
 import AdminPanel from "./pages/AdminPanel";
+import Landing from "./pages/Landing";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,11 +30,7 @@ function App() {
   return (
     <div>
       {!isLoggedIn ? (
-        <>
-          <h2>Please Login or Register</h2>
-          <Register />
-          <Login />
-        </>
+        <Landing />
       ) : (
         <>
           <button onClick={handleLogout}>Logout</button>
