@@ -73,7 +73,7 @@ setUserMeals(mealRes.data);
   };
 
   const getUserMeal = (date) => {
-  return userMeals.find((m) => m.date === date);
+  return userMeals?.find((m) => m.date === date) || null;
   };
 
   const handleDelete = async (id) => {
@@ -369,6 +369,8 @@ const fetchMonthlyPlan = async () => {
   const day = getDay(menu.date);
   const isSunday = day === "Sunday";
 
+  const userMeal = getUserMeal(menu.date);
+
   return (
     <div
   key={menu._id}
@@ -430,12 +432,10 @@ const fetchMonthlyPlan = async () => {
       <input
   type="checkbox"
   checked={
-  selection[menu._id]?.breakfast !== undefined
+    selection[menu._id]?.breakfast !== undefined
     ? selection[menu._id]?.breakfast
-    : getUserMeal(menu.date)
-    ? getUserMeal(menu.date)?.breakfast
-    : monthlyPlan?.breakfast || false
-}
+    : userMeal?.breakfast ?? monthlyPlan?.breakfast ?? false
+  }
   onChange={() => handleChange(menu._id, "breakfast")}
 />
       Breakfast
@@ -447,10 +447,8 @@ const fetchMonthlyPlan = async () => {
   checked={
   selection[menu._id]?.lunch !== undefined
     ? selection[menu._id]?.lunch
-    : getUserMeal(menu.date)
-    ? getUserMeal(menu.date)?.lunch
-    : monthlyPlan?.lunch || false
-}
+    : userMeal?.lunch ?? monthlyPlan?.lunch ?? false
+  }
   onChange={() => handleChange(menu._id, "lunch")}
 />
       Lunch
@@ -462,10 +460,8 @@ const fetchMonthlyPlan = async () => {
   checked={
   selection[menu._id]?.dinner !== undefined
     ? selection[menu._id]?.dinner
-    : getUserMeal(menu.date)
-    ? getUserMeal(menu.date)?.dinner
-    : monthlyPlan?.dinner || false
-}
+    : userMeal?.dinner ?? monthlyPlan?.dinner ?? false
+  }
   onChange={() => handleChange(menu._id, "dinner")}
 />
       Dinner
