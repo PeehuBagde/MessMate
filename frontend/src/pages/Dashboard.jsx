@@ -24,7 +24,7 @@ useEffect(() => {
 
       // 🔹 FETCH MENUS
       const res = await axios.get(
-        "http://localhost:5000/api/menu",
+        "https://messmate-liat.onrender.com/api/menu",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,7 +36,7 @@ useEffect(() => {
 
       // 🔹 FETCH BILL (ADD THIS PART)
       const billRes = await axios.get(
-        "http://localhost:5000/api/bill",
+        "https://messmate-liat.onrender.com/api/bill",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ useEffect(() => {
       );
 
       const mealRes = await axios.get(
-  "http://localhost:5000/api/meal",
+  "https://messmate-liat.onrender.com/api/meal",
   {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ setUserMeals(mealRes.data);
   try {
     const token = localStorage.getItem("token");
 
-    await axios.delete(`http://localhost:5000/api/menu/${id}`, {
+    await axios.delete(`https://messmate-liat.onrender.com/api/menu/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -98,7 +98,7 @@ setUserMeals(mealRes.data);
     const token = localStorage.getItem("token");
 
     await axios.put(
-      `http://localhost:5000/api/menu/${editMenu._id}`,
+      `https://messmate-liat.onrender.com/api/menu/${editMenu._id}`,
       editMenu,
       {
         headers: {
@@ -139,7 +139,7 @@ const handleSave = async (menu) => {
     : {});
 
     const res = await axios.post(
-      "http://localhost:5000/api/meal",
+      "https://messmate-liat.onrender.com/api/meal",
       {
         date: menu.date,
         breakfast: selected.breakfast || false,
@@ -174,7 +174,7 @@ const handleMonthlySave = async () => {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      "http://localhost:5000/api/meal/monthly",
+      "https://messmate-liat.onrender.com/api/meal/monthly",
       monthlyPlan,
       {
         headers: {
@@ -194,7 +194,7 @@ const fetchMonthlyPlan = async () => {
     const token = localStorage.getItem("token");
 
     const res = await axios.get(
-      "http://localhost:5000/api/meal/monthly",
+      "https://messmate-liat.onrender.com/api/meal/monthly",
       {
         headers: {
           Authorization: `Bearer ${token}`,

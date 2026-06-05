@@ -9,7 +9,7 @@ function Landing() {
     const handleLogin = async () => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/auth/login",
+                "https://messmate-liat.onrender.com/api/auth/login",
                 { email, password }
             );
             localStorage.setItem("token", res.data.token);
@@ -22,7 +22,7 @@ function Landing() {
     const handleSignup = async () => {
         try {
             await axios.post(
-                "http://localhost:5000/api/auth/register",
+                "https://messmate-liat.onrender.com/api/auth/register",
                 { email, password }
             );
             alert("Signup successful! Please login.");

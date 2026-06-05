@@ -19,7 +19,7 @@ function AdminPanel() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.post("http://localhost:5000/api/menu", form, {
+      await axios.post("https://messmate-liat.onrender.com/api/menu", form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
