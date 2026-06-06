@@ -206,11 +206,15 @@ const fetchMonthlyPlan = async () => {
       }
     );
 
-    console.log("API DATA:", res.data);
-
-    setMonthlyPlan(res.data);
+    if (res.data && typeof res.data === "object") {
+      setMonthlyPlan({
+        breakfast: res.data.breakfast ?? false,
+        lunch: res.data.lunch ?? false,
+        dinner: res.data.dinner ?? false,
+      });
+    }
   } catch (err) {
-    console.log(err);
+    console.error("fetchMonthlyPlan error:", err);
   }
 };
 

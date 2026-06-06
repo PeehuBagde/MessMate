@@ -71,7 +71,13 @@ const getMeals = async (req, res) => {
 
 const saveMonthlyPlan = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const { breakfast, lunch, dinner } = req.body;
+    if (breakfast === undefined || lunch === undefined || dinner === undefined) {
+      return res.status(400).json({ message: "breakfast, lunch, dinner are required" });
+    }
 
     // get current month like "2026-05"
     const month = new Date().toISOString().slice(0, 7);
@@ -95,12 +101,16 @@ const saveMonthlyPlan = async (req, res) => {
     });
 
   } catch (error) {
+    console.error("saveMonthlyPlan error:", error); // ✅ logs real error in Render
     res.status(500).json({ message: error.message });
   }
 };
 
 const getMonthlyPlan = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const month = new Date().toISOString().slice(0, 7);
 
     const plan = await MonthlyPlan.findOne({
@@ -108,8 +118,17 @@ const getMonthlyPlan = async (req, res) => {
       month,
     });
 
-    res.json(plan);
+    if (!plan) {
+      return res.json({ breakfast: false, lunch: false, dinner: false });
+    }
+
+    res.json({
+      breakfast: plan.breakfast,
+      lunch: plan.lunch,
+      dinner: plan.dinner,
+    });
   } catch (error) {
+    console.error("getMonthlyPlan error:", error); // ✅ logs real error in Render
     res.status(500).json({ message: error.message });
   }
 };
