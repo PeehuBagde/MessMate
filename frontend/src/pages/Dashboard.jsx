@@ -9,7 +9,11 @@ function Dashboard() {
   const [selection, setSelection] = useState({});
   const [bill, setBill] = useState(null);
   const [userMeals, setUserMeals] = useState([]);
-  const [monthlyPlan, setMonthlyPlan] = useState(null);
+  const [monthlyPlan, setMonthlyPlan] = useState({
+    breakfast: false,
+    lunch: false,
+    dinner: false,
+  });
   console.log("Monthly Plan:", monthlyPlan);
 
 useEffect(() => {
@@ -132,9 +136,9 @@ const handleSave = async (menu) => {
   selection[menu._id] ||
   (monthlyPlan
     ? {
-        breakfast: monthlyPlan.breakfast,
-        lunch: monthlyPlan.lunch,
-        dinner: monthlyPlan.dinner,
+        breakfast: monthlyPlan?.breakfast,
+        lunch: monthlyPlan?.lunch,
+        dinner: monthlyPlan?.dinner,
       }
     : {});
 
