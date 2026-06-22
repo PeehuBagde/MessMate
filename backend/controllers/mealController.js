@@ -15,19 +15,8 @@ const selectMeal = async (req, res) => {
   try {
     const { date, breakfast, lunch, dinner } = req.body;
 
-// get month from date (e.g. "2026-05")
-const month = date.slice(0, 7);
-
-// check if monthly plan exists
-const monthlyPlan = await MonthlyPlan.findOne({
-  userId: req.user.id,
-  month,
-});
-
-if (!monthlyPlan) {
-  return res.status(400).json({
-    message: "Please set your monthly plan first",
-  });
+if (!date) {
+  return res.status(400).json({ message: "Date is required" });
 }
 
     const existing = await Meal.findOne({ userId: req.user.id, date });
