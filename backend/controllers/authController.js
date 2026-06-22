@@ -4,15 +4,29 @@ const jwt = require("jsonwebtoken");
 
 // REGISTER
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, adminSecret } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    let role = "student"; // default
+
+    // 🔐 Admin security check
+    if (adminSecret) {
+      if (adminSecret === process.env.ADMIN_SECRET) {
+        role = "admin";
+      } else {
+        return res.status(403).json({
+          message: "Invalid admin secret",
+        });
+      }
+    }
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
+      role, // 🔥 IMPORTANT ADD THIS
     });
 
     res.json(user);
