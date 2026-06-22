@@ -2,41 +2,48 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function Landing() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isSignup, setIsSignup] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignup, setIsSignup] = useState(false);
+  const [adminSecret, setAdminSecret] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    const handleLogin = async () => {
-        try {
-            const res = await axios.post(
-                "https://messmate-liat.onrender.com/api/auth/login",
-                { email, password }
-            );
-            localStorage.setItem("token", res.data.token);
-            window.location.reload();
-        } catch (err) {
-            alert("Invalid credentials");
-        }
-    };
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(
+        "https://messmate-liat.onrender.com/api/auth/login",
+        { email, password }
+      );
+      localStorage.setItem("token", res.data.token);
+      window.location.reload();
+    } catch (err) {
+      alert("Invalid credentials");
+    }
+  };
 
-    const handleSignup = async () => {
-        try {
-            await axios.post(
-                "https://messmate-liat.onrender.com/api/auth/register",
-                { email, password }
-            );
-            alert("Signup successful! Please login.");
-            setIsSignup(false);
-        } catch (err) {
-            alert("Signup failed");
+  const handleSignup = async () => {
+    try {
+      await axios.post(
+        "https://messmate-liat.onrender.com/api/auth/register",
+        {
+          name,
+          email,
+          password,
+          adminSecret: isAdmin ? adminSecret : undefined,
         }
-    };
+      );
+      alert("Signup successful! Please login.");
+      setIsSignup(false);
+    } catch (err) {
+      alert(err.response?.data?.message || "Signup failed");
+    }
+  };
 
   return (
     <div
       style={{
         height: "100vh",
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -60,7 +67,7 @@ function Landing() {
       >
         {/* LOGO */}
         <h1 style={{ fontSize: "35px", marginBottom: "10px" }}>
-           MessMate
+          MessMate
         </h1>
 
         <p style={{ fontSize: "14px", color: "#94a3b8", marginBottom: "25px" }}>
@@ -68,54 +75,118 @@ function Landing() {
         </p>
 
         <p style={{ marginBottom: "15px", color: "#cbd5f5" }}>
-            {isSignup ? "Create your account" : "Login to your account"}
+          {isSignup ? "Create your account" : "Login to your account"}
         </p>
 
-        <p style={{ marginBottom: "10px", fontSize: "14px", color: "#cbd5f5" }}>
-          Enter your details to continue
-        </p>
+        {/* TOGGLE */}
+        <div style={{ display: "flex", marginBottom: "15px" }}>
+          <button
+            onClick={() => setIsAdmin(false)}
+            style={{
+              flex: 1,
+              padding: "10px",
+              background: !isAdmin ? "#2563eb" : "#e5e7eb",
+              color: !isAdmin ? "white" : "black",
+              border: "none",
+              cursor: "pointer",
+              borderRadius: "8px 0 0 8px",
+            }}
+          >
+            Student
+          </button>
 
-        {/* EMAIL INPUT */}
+          <button
+            onClick={() => setIsAdmin(true)}
+            style={{
+              flex: 1,
+              padding: "10px",
+              background: isAdmin ? "#2563eb" : "#e5e7eb",
+              color: isAdmin ? "white" : "black",
+              border: "none",
+              cursor: "pointer",
+              borderRadius: "0 8px 8px 0",
+            }}
+          >
+            Admin
+          </button>
+        </div>
+
+        {/* NAME INPUT */}
+        {isSignup && (
+          <input
+            type="text"
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              border: "1px solid rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.08)",
+              color: "white",
+            }}
+          />
+        )}
+
+        {/* EMAIL */}
         <input
-        type="email"
-        placeholder="Enter email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{
+          type="email"
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{
             width: "100%",
-            boxSizing: "border-box",
             padding: "12px",
             borderRadius: "10px",
-            border: "1px solid rgba(255,255,255,0.2)",
-            background: "rgba(255,255,255,0.08)",
-            color: "white",
-            outline: "none",
             marginBottom: "10px",
-        }}
-        />
-
-        {/* PASSWORD INPUT */}
-        <input
-        type="password"
-        placeholder="Enter password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{
-            width: "100%",
-            boxSizing: "border-box",
-            padding: "12px",
-            borderRadius: "10px",
             border: "1px solid rgba(255,255,255,0.2)",
             background: "rgba(255,255,255,0.08)",
             color: "white",
-            outline: "none",
-            marginBottom: "15px",
-        }}
+          }}
         />
 
-        {/* LOGIN BUTTON */}
+        {/* PASSWORD */}
+        <input
+          type="password"
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            marginBottom: "10px",
+            border: "1px solid rgba(255,255,255,0.2)",
+            background: "rgba(255,255,255,0.08)",
+            color: "white",
+          }}
+        />
+
+        {/* ADMIN SECRET */}
+        {isAdmin && isSignup && (
+          <input
+            type="text"
+            placeholder="Enter Admin Secret"
+            value={adminSecret}
+            onChange={(e) => setAdminSecret(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "10px",
+              marginBottom: "10px",
+              border: "1px solid rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.08)",
+              color: "white",
+            }}
+          />
+        )}
+
+        {/* BUTTON */}
         <button
-        style={{
+          onClick={isSignup ? handleSignup : handleLogin}
+          style={{
             width: "100%",
             padding: "12px",
             borderRadius: "10px",
@@ -124,38 +195,20 @@ function Landing() {
             color: "white",
             fontSize: "15px",
             cursor: "pointer",
-            transition: "0.3s",
-        }}
-        onMouseOver={(e) => (e.target.style.opacity = "0.9")}
-        onMouseOut={(e) => (e.target.style.opacity = "1")}
-        onClick={isSignup ? handleSignup : handleLogin}
-        >
-        Continue
-        </button>
-
-        <p style={{ marginTop: "15px", fontSize: "13px", color: "#94a3b8" }}>
-            {isSignup ? "Already have an account?" : "Don't have an account?"}
-            <span
-            style={{
-                color: "#3b82f6",
-                cursor: "pointer",
-                marginLeft: "5px",
-            }}
-            onClick={() => setIsSignup(!isSignup)}
-            >
-            {isSignup ? "Login" : "Sign up"}
-            </span>
-            </p>
-
-        {/* FOOTER TEXT */}
-        <p
-          style={{
-            marginTop: "20px",
-            fontSize: "12px",
-            color: "#64748b",
           }}
         >
-          By continuing, you agree to MessMate Terms & Privacy
+          Continue
+        </button>
+
+        {/* SWITCH */}
+        <p style={{ marginTop: "15px", fontSize: "13px", color: "#94a3b8" }}>
+          {isSignup ? "Already have an account?" : "Don't have an account?"}
+          <span
+            style={{ color: "#3b82f6", cursor: "pointer", marginLeft: "5px" }}
+            onClick={() => setIsSignup(!isSignup)}
+          >
+            {isSignup ? "Login" : "Sign up"}
+          </span>
         </p>
       </div>
     </div>
