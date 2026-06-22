@@ -14,6 +14,7 @@ function Dashboard() {
     lunch: false,
     dinner: false,
   });
+  const [allMeals, setAllMeals] = useState([]);
   console.log("Monthly Plan:", monthlyPlan);
 
 useEffect(() => {
@@ -70,6 +71,32 @@ setUserMeals(mealRes.data);
   fetchMonthlyPlan();
 }, []);
 
+
+ useEffect(() => {
+  const fetchAllMeals = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(
+        "https://messmate-liat.onrender.com/api/meal/all",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setAllMeals(res.data);
+    } catch (err) {
+      console.log("Admin fetch error:", err);
+    }
+  };
+
+  if (role === "admin") {
+    fetchAllMeals();
+  }
+}, [role]);
+
   const getDay = (dateString) => {
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const date = new Date(dateString);
@@ -91,7 +118,7 @@ setUserMeals(mealRes.data);
     });
 
     alert("Menu deleted!");
-    window.location.reload();
+    fetchMenus();
   } catch (err) {
     console.error(err);
   }
@@ -112,7 +139,7 @@ setUserMeals(mealRes.data);
     );
 
     alert("Menu updated!");
-    window.location.reload();
+    fetchMenus();
   } catch (err) {
     console.error(err);
   }
@@ -122,7 +149,7 @@ const handleChange = (menuId, field) => {
   setSelection((prev) => ({
     ...prev,
     [menuId]: {
-      ...prev[menuId],
+      ...(prev[menuId] || {}), 
       [field]: !prev[menuId]?.[field],
     },
   }));
@@ -158,7 +185,7 @@ const handleSave = async (menu) => {
     );
 
     alert(res.data.message); 
-    window.location.reload();
+    fetchMenus();
 
   } catch (err) {
     console.error(err);
@@ -258,7 +285,7 @@ const fetchMonthlyPlan = async () => {
     <button
       onClick={() => {
         localStorage.removeItem("token");
-        window.location.reload();
+        fetchMenus();
       }}
       style={{
         padding: "6px 12px",
@@ -338,6 +365,42 @@ const fetchMonthlyPlan = async () => {
     >
       Save Monthly Plan
     </button>
+  </div>
+)}
+
+{role === "admin" && (
+  <div
+    style={{
+      backgroundColor: "#ffffff",
+      padding: "20px",
+      marginTop: "30px",
+      borderRadius: "10px",
+      border: "1px solid #e5e7eb",
+    }}
+  >
+    <h2>📊 Student Meal Selections</h2>
+
+    {allMeals.length === 0 ? (
+      <p>No data available</p>
+    ) : (
+      allMeals.map((meal) => (
+        <div
+          key={meal._id}
+          style={{
+            borderBottom: "1px solid #ccc",
+            padding: "10px 0",
+          }}
+        >
+          <p><b>User:</b> {meal.userId?.email || "Unknown"}</p>
+          <p><b>Date:</b> {meal.date}</p>
+          <p>
+            Breakfast: {meal.breakfast ? "✔" : "❌"} |
+            Lunch: {meal.lunch ? "✔" : "❌"} |
+            Dinner: {meal.dinner ? "✔" : "❌"}
+          </p>
+        </div>
+      ))
+    )}
   </div>
 )}
 
