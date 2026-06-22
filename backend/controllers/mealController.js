@@ -122,4 +122,23 @@ const getMonthlyPlan = async (req, res) => {
   }
 };
 
-module.exports = { selectMeal, getMeals, saveMonthlyPlan, getMonthlyPlan,};
+// GET ALL MEALS (ADMIN)
+exports.getAllMeals = async (req, res) => {
+  try {
+    const meals = await Meal.find()
+      .populate("userId", "email") // get user email
+      .sort({ date: -1 });
+
+    res.json(meals);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  selectMeal,
+  getMeals,
+  saveMonthlyPlan,
+  getMonthlyPlan,
+  getAllMeals,
+};
