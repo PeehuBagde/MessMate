@@ -17,7 +17,6 @@ function Dashboard() {
   const [allMeals, setAllMeals] = useState([]);
   console.log("Monthly Plan:", monthlyPlan);
 
-useEffect(() => {
   const fetchMenus = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -66,6 +65,7 @@ setUserMeals(mealRes.data);
       console.error(err);
     }
   };
+useEffect(() => {
 
   fetchMenus();
   fetchMonthlyPlan();
@@ -118,7 +118,7 @@ setUserMeals(mealRes.data);
     });
 
     alert("Menu deleted!");
-    fetchMenus();
+    await fetchMenus();
   } catch (err) {
     console.error(err);
   }
@@ -139,7 +139,7 @@ setUserMeals(mealRes.data);
     );
 
     alert("Menu updated!");
-    fetchMenus();
+    await fetchMenus();
   } catch (err) {
     console.error(err);
   }
@@ -185,7 +185,7 @@ const handleSave = async (menu) => {
     );
 
     alert(res.data.message); 
-    fetchMenus();
+    await fetchMenus();
 
   } catch (err) {
     console.error(err);
